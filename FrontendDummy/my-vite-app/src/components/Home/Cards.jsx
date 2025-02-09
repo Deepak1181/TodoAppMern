@@ -19,7 +19,6 @@ try {
  const response= await axios.put(`http://localhost:1000/api/v2/update-complete-task/${id}`,{},{headers})
  console.log(response,"update taskkkk")
 
- 
 } catch (error) {
   console.log(error)
   
@@ -29,7 +28,7 @@ try {
 
 const handleImportant= async(id)=>{
   try {
-   const response= await axios.put(`http://localhost:1000/api/v2/update-imp-task/${id}`,{headers})
+   const response= await axios.put(`http://localhost:1000/api/v2/update-imp-task/${id}`,{},{headers})
    console.log(response,"update taskkkk")
   
    

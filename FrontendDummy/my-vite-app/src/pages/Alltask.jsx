@@ -38,9 +38,9 @@ const Alltask = () => {
             { headers }
           );
       setData(response.data.data)
-          // console.log("✅ Response:", response.data);
+          // console.log("Response:", response.data);
         } catch (error) {
-          console.error("❌ Fetch error:", error.response?.data || error.message);
+          console.error(" Fetch error:", error.response?.data || error.message);
         }
       };
   
