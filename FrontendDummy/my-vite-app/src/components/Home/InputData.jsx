@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { ImCross } from "react-icons/im";
+import { useNavigate } from "react-router-dom";
 
 const InputData = ({ InputDiv, setInputDiv }) => {
-
+  const navigate = useNavigate()
   const userId = localStorage.getItem("id");
   const token = localStorage.getItem("token");
 
@@ -24,6 +25,8 @@ setData({...Data,[name]:value})
      else{
       await axios.post('http://localhost:1000/api/v2/create-task',Data,{headers})
      }
+     setData({title:"",desc:""})
+     navigate("/")
    }
   return (
     <>

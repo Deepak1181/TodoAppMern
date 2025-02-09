@@ -3,6 +3,7 @@ import { MdDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { IoIosAddCircleOutline } from "react-icons/io";
+import { FaHeart } from "react-icons/fa6";
 import axios from "axios";
 const Cards = ({home, setInputDiv,data}) => {
   const userId = localStorage.getItem("id");
@@ -24,6 +25,35 @@ try {
   
 }
 }
+
+
+const handleImportant= async(id)=>{
+  try {
+   const response= await axios.put(`http://localhost:1000/api/v2/update-imp-task/${id}`,{headers})
+   console.log(response,"update taskkkk")
+  
+   
+  } catch (error) {
+    console.log(error)
+    
+  }
+  }
+  
+
+
+  const deletefunc = async(id)=>{
+    try {
+     const response= await axios.delete(`http://localhost:1000/api/v2/delete-task/${id}`,{headers})
+     console.log(response,"update taskkkk")
+    
+     
+    } catch (error) {
+      console.log(error)
+      
+    }
+    }
+    
+
   // const [ImportantButton, setImportantButton] = useState("Incomplete");
   return (
     <div className="p-4 grid grid-cols-4 gap-4 ">
@@ -44,13 +74,15 @@ try {
               {item.complete === true ? "Completed" : 'InCompleted'}
             </button>
             <div>
-              <button className="bg-blue-600 px-2 py-1 text-xl rounded mx-2">
-                <FaRegHeart />
+              <button  onClick={()=>handleImportant(item._id)} className="bg-blue-600 px-2 py-1 text-xl rounded mx-2">
+                {item.important === false ?(<FaRegHeart /> ):(<FaHeart className="text-red-800"/>)}
+              {/* {data.important===false ? <FaRegHeart /> :<FaHeart className="text-red-800"/>}   */}
               </button>
+             
               <button className="bg-blue-600 px-2 py-1 text-xl rounded mx-2">
                 <FaRegEdit />
               </button>
-              <button className="bg-blue-600 px-2 py-1 text-xl rounded mx-2">
+              <button onClick={()=>deletefunc(item._id)} className="bg-blue-600 px-2 py-1 text-xl rounded mx-2">
                 <MdDelete />
               </button>
             </div>
