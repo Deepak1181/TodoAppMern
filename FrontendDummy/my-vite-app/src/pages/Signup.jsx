@@ -2,11 +2,17 @@ import React, { useState } from 'react';
 import { User, Mail, Lock, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios"
+import { useSelector } from 'react-redux';
 
 const Signup = () => {
+  const history = useNavigate()
+  const isLoggedIn = useSelector((state)=>state.auth.isLoggedIn)
+  if(isLoggedIn==true){
+    history("/");
+
+  }
   const [Data, setData] = useState({username:"",  email:"",password:""})
   
-const history = useNavigate()
   const change = (e) => {
    const {name,value}= e.target;
    setData({...Data,[name]:value})

@@ -1,10 +1,52 @@
-import {React, useState } from 'react'
+import {React, useEffect, useState } from 'react'
 import Cards from '../components/Home/Cards'
 import { IoIosAddCircleOutline } from "react-icons/io";
 import InputData from '../components/Home/InputData';
+import axios from 'axios';
 
 const Alltask = () => {
     const [InputDiv, setInputDiv] = useState("hidden")
+    const [Data, setData] = useState()
+    // const token = localStorage.getItem("token");
+
+    // const headers = {
+    //   id: userId,
+    //   authorization: `Bearer ${token}`,
+    // };
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const userId = localStorage.getItem("id");
+          const token = localStorage.getItem("token");
+  
+          if (!userId || !token) {
+            console.error("❌ User ID or Token is missing!");
+            return;
+          }
+  
+          const headers = {
+            id: userId,
+            authorization: `Bearer ${token}`,
+          };
+  
+          console.log("🔍 Sending request with headers:", headers);
+  
+          const response = await axios.get(
+            "http://localhost:1000/api/v2/get-all-tasks",
+            { headers }
+          );
+      setData(response.data.data)
+          // console.log("✅ Response:", response.data);
+        } catch (error) {
+          console.error("❌ Fetch error:", error.response?.data || error.message);
+        }
+      };
+  
+      fetchData();
+    },[]);
+    // Data && console.log(Data.tasks)
+  
   return (
    <>
     <div>
@@ -14,7 +56,7 @@ const Alltask = () => {
              </button>
                {/* <p className="text-2xl">Add task</p> */}
              </div>
-        <Cards home={"true"}  setInputDiv={setInputDiv} />
+      { Data&& <Cards home={"true"}  setInputDiv={setInputDiv}  data={Data.tasks}/>}
     </div>
     <InputData InputDiv={InputDiv} setInputDiv={setInputDiv} />
    </>

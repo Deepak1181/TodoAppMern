@@ -1,24 +1,19 @@
-const express = require("express")
-const app = express()
-const UserApi = require("./route/user")
-const TaskApi = require("./route/task")
-require("dotenv").config()
-require("./Connection/Connection")
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
+require("./Connection/Connection");
 
-// const cors = require('cors');
+const app = express();
+app.use(cors());  // ✅ Move CORS to the top
+app.use(express.json());
 
-const cors = require("cors")
-app.use(express.json())
-app.use("/api/v1",UserApi)
-app.use("/api/v2",TaskApi)
-app.use(cors({ origin: "http://localhost:5173" }));
+const UserApi = require("./route/user");
+const TaskApi = require("./route/task");
 
-app.use(cors())
-// app.use("/",(req,res)=>{
-//     res.send("heello")
-// })
-const PORT = 1000
+app.use("/api/v1", UserApi);
+app.use("/api/v2", TaskApi);
 
-app.listen(PORT,()=>{
-    console.log("server start")
-})
+const PORT = 1000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});

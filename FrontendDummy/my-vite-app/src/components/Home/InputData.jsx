@@ -1,7 +1,30 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 import { ImCross } from "react-icons/im";
 
 const InputData = ({ InputDiv, setInputDiv }) => {
+
+  const userId = localStorage.getItem("id");
+  const token = localStorage.getItem("token");
+
+  const headers = {
+    id: userId,
+    authorization: `Bearer ${token}`,
+  };
+  const [Data,setData] = useState({title:"",desc:""})
+   const change=(e)=>{
+const {name,value} = e.target
+setData({...Data,[name]:value})
+   }
+
+   const submitData= async()=>{
+     if(Data.title=== "" || Data.desc===""){
+      alert("All Fileds are rwquire")
+     } 
+     else{
+      await axios.post('http://localhost:1000/api/v2/create-task',Data,{headers})
+     }
+   }
   return (
     <>
       {/* Background Overlay */}
@@ -22,8 +45,10 @@ const InputData = ({ InputDiv, setInputDiv }) => {
           <input
             type="text"
             placeholder="Title"
-            name="Title"
+            name="title"
             className="px-3 py-2 border border-amber-50 rounded w-full bg-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                     value={Data.title}
+                     onChange={change}
           />
           <textarea
             cols="30"
@@ -31,10 +56,12 @@ const InputData = ({ InputDiv, setInputDiv }) => {
             placeholder="Description"
             name="desc"
             className="px-3 py-2 border border-amber-50 rounded w-full bg-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+         value={Data.desc}
+         onChange={change}
           ></textarea>
 
           {/* Submit Button */}
-          <button className="px-3 py-2 bg-blue-400 hover:bg-blue-500 rounded text-black text-xl transition">
+          <button onClick={submitData} className="px-3 py-2 bg-blue-400 hover:bg-blue-500 rounded text-black text-xl transition">
             Submit
           </button>
         </div>

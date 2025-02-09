@@ -10,22 +10,44 @@ const authenticateToken = require("./auth");
 
 //createTask
 
-router.post("/create-task",authenticateToken, async(req,res)=>{
-  
-    try {
-        const {title,desc}= req.body;
-        const {id} = req.headers
-        const newTask = new Task({title:title,desc:desc});
-       const saveTask = await newTask.save()
-       const taskid= saveTask._id
-       await User.findByIdAndUpdate(id,{$push:{tasks:taskid._id}})
-       res.status(200).json({message:"Task Created"})
-    } catch (error) {
-       console.log(error)
-      res.status(400).json({ message: "Invalid credentials" }); 
-    }
-})
 
+
+
+router.post("/create-task", authenticateToken, async (req, res) => {
+  try {
+    const { title, desc } = req.body;
+    const { id } = req.headers; // User ID
+
+    // Validate request body
+    if (!title || !desc) {
+      return res.status(400).json({ message: "Title and description are required" });
+    }
+
+    // Validate user ID
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check for duplicate task title
+    const existingTask = await Task.findOne({ title });
+    if (existingTask) {
+      return res.status(400).json({ message: "Task with this title already exists" });
+    }
+
+    // Create new task
+    const newTask = new Task({ title, desc });
+    const saveTask = await newTask.save();
+
+    // Add task to user
+    await User.findByIdAndUpdate(id, { $push: { tasks: saveTask._id } });
+
+    res.status(201).json({ message: "Task Created", task: saveTask });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 router.get("/get-all-tasks",authenticateToken,async(req,res)=>{
     try {
@@ -46,8 +68,8 @@ router.delete("/delete-task/:id", authenticateToken, async (req, res) => {
         const {id} = req.params ; 
      
   
-      const userId= req.headers.id
-       await Task.findByIdAndDelete(id);
+        const userId= req.headers.id
+        await Task.findByIdAndDelete(id);
         await User.findByIdAndUpdate(userId,{$pull :{tasks:id}})
       res.status(200).json({ message: "Task deleted successfully" });
 
@@ -126,20 +148,20 @@ router.delete("/delete-task/:id", authenticateToken, async (req, res) => {
 
   router.get("/get-imp-tasks",authenticateToken,async(req,res)=>{
     try {
-  const {id} = req.headers
- const Data= await User.findById(id).populate({path:"tasks",
+    const {id} = req.headers
+    const Data= await User.findById(id).populate({path:"tasks",
     match :{important:true},
     options:{sort:{createdAt:-1}}})
  
  const ImpTaskData = Data.tasks
     res.status(200).json({data:ImpTaskData})
-}  catch(error){
+  }  catch(error){
     console.log(error)
       res.status(400).json({ message: "interval server error" }); 
-}
+  }
 
-}
-)
+  }
+ )
 
 
 
