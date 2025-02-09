@@ -7,6 +7,7 @@ import axios from 'axios';
 const Alltask = () => {
     const [InputDiv, setInputDiv] = useState("hidden")
     const [Data, setData] = useState()
+    const [UpdatedData, setUpdatedData] = useState({id:"",title:"",desc:""})
     // const token = localStorage.getItem("token");
 
     // const headers = {
@@ -21,7 +22,7 @@ const Alltask = () => {
           const token = localStorage.getItem("token");
   
           if (!userId || !token) {
-            console.error("❌ User ID or Token is missing!");
+            console.error(" User ID or Token is missing!");
             return;
           }
   
@@ -56,9 +57,9 @@ const Alltask = () => {
              </button>
                {/* <p className="text-2xl">Add task</p> */}
              </div>
-      { Data&& <Cards home={"true"}  setInputDiv={setInputDiv}  data={Data.tasks}/>}
+      { Data&& <Cards home={"true"}  setInputDiv={setInputDiv}  data={Data.tasks} setUpdatedData={UpdatedData}/>}
     </div>
-    <InputData InputDiv={InputDiv} setInputDiv={setInputDiv} />
+    <InputData InputDiv={InputDiv} setInputDiv={setInputDiv}  UpdatedData={UpdatedData} setUpdatedData={setUpdatedData}/>
    </>
   )
 }

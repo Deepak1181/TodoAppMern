@@ -5,7 +5,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { FaHeart } from "react-icons/fa6";
 import axios from "axios";
-const Cards = ({home, setInputDiv,data}) => {
+const Cards = ({home, setInputDiv,data,setUpdatedData}) => {
   const userId = localStorage.getItem("id");
   const token = localStorage.getItem("token");
 
@@ -54,6 +54,12 @@ const handleImportant= async(id)=>{
     }
     
 
+
+    const handleUpdate=(id,title,desc)=>{
+setInputDiv("fixed")
+setUpdatedData({id:id,title:title,desc:desc})
+    }
+
   // const [ImportantButton, setImportantButton] = useState("Incomplete");
   return (
     <div className="p-4 grid grid-cols-4 gap-4 ">
@@ -79,9 +85,10 @@ const handleImportant= async(id)=>{
               {/* {data.important===false ? <FaRegHeart /> :<FaHeart className="text-red-800"/>}   */}
               </button>
              
-              <button className="bg-blue-600 px-2 py-1 text-xl rounded mx-2">
+              
+              {home!=="false" && <button onClick={()=>handleUpdate(item._id,item.title,item.desc)} className="bg-blue-600 px-2 py-1 text-xl rounded mx-2">
                 <FaRegEdit />
-              </button>
+              </button>}
               <button onClick={()=>deletefunc(item._id)} className="bg-blue-600 px-2 py-1 text-xl rounded mx-2">
                 <MdDelete />
               </button>
